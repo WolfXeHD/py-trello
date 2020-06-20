@@ -60,6 +60,17 @@ class Checklist(TrelloBase):
         for name in [item['name'] for item in self.items]:
             self.delete_checklist_item(name)
 
+    def clear_robust(self):
+        """Clear checklist by removing all checklist items 
+        (no reference to names)"""
+        while len(self.items) != 0:
+            id = self.items[0]['id']
+            self.client.fetch_json(
+                '/checklists/' + self.id +
+                '/checkItems/' + id,
+                http_method='DELETE')
+            del self.items[0]
+
     def set_checklist_item(self, name, checked):
         """Set the state of an item on this checklist
 
